@@ -6,6 +6,8 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UCAttributeComponent;
+class UCOptionComponent;
 
 UCLASS()
 class TORETHIRDPERSONCPP_API ACPlayer : public ACharacter
@@ -28,11 +30,22 @@ private:
 	void OnTurn(float Axis);
 	void OnLookUp(float Axis);
 
+	void OnZoom(float Axis);
+
+	void OnWalk();
+	void OffWalk();
+
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UCameraComponent* CameraComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UCAttributeComponent* AttributeComp;	
+	
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UCOptionComponent* OptionComp;
 
 };
