@@ -8,6 +8,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UCAttributeComponent;
 class UCOptionComponent;
+class UCStateComponent;
 
 UCLASS()
 class TORETHIRDPERSONCPP_API ACPlayer : public ACharacter
@@ -47,5 +48,8 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UCOptionComponent* OptionComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UCStateComponent* StateComp;
 
 };

@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/COptionComponent.h"
+#include "Components/CStateComponent.h"
 
 
 ACPlayer::ACPlayer()
@@ -19,6 +20,7 @@ ACPlayer::ACPlayer()
 	//Create Actor Component
 	CHelpers::CreateActorComponent(this, &AttributeComp, "AttributeComp");
 	CHelpers::CreateActorComponent(this, &OptionComp, "OptionComp");
+	CHelpers::CreateActorComponent(this, &StateComp, "StateComp");
 
 	//Component Settings
 	//-> MeshComp
