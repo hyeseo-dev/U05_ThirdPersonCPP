@@ -41,6 +41,9 @@ private:
 	FString MakeActorLabel(ACharacter* InOnwerCharacter, FString InMiddleName);
 
 public:
+	FORCEINLINE ACEquipment* GetEquipment() { return Equipment; }
+
+public:
 	UPROPERTY(EditAnywhere, Category = "Equipment")
 	TSubclassOf<ACEquipment> EquipmentClass;
 
