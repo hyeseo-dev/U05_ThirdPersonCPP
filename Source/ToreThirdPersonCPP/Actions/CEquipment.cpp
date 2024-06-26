@@ -4,6 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CAttributeComponent.h"
+#include "Interface/CCharacterInterface.h"
 
 ACEquipment::ACEquipment()
 {
@@ -50,6 +51,12 @@ void ACEquipment::Equip_Implementation()
 	}
 
 	Data.bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop();
+
+	ICCharacterInterface* CharacterInterface = Cast<ICCharacterInterface>(OwnerCharacter);
+
+	CheckNull(CharacterInterface);
+
+	CharacterInterface->ChangeBodyColor(Color);
 }
 
 void ACEquipment::Begin_Equip_Implementation()
