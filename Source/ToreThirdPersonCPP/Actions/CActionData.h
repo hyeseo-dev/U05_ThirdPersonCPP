@@ -37,6 +37,9 @@ class TORETHIRDPERSONCPP_API UCActionData : public UDataAsset
 public:
 	void BeginPlay(ACharacter* InOwnerCharacter);
 
+private:
+	FString MakeActorLabel(ACharacter* InOnwerCharacter, FString InMiddleName);
+
 public:
 	UPROPERTY(EditAnywhere, Category = "Equipment")
 	TSubclassOf<ACEquipment> EquipmentClass;
