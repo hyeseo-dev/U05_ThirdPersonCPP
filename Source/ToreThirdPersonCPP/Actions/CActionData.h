@@ -6,6 +6,7 @@
 
 class UAnimMontage;
 class ACEquipment;
+class ACAttachment;
 class ACharacter;
 
 USTRUCT(BlueprintType)
@@ -53,6 +54,10 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Equipment")
 	FLinearColor EquipmentColor;
 
+	UPROPERTY(EditAnywhere, Category = "Attachment")
+	TSubclassOf<ACAttachment> AttachmentClass;
+
 private:
 	ACEquipment* Equipment;
+	ACAttachment* Attachment;
 };
