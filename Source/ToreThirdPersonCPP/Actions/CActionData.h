@@ -7,7 +7,10 @@
 class UAnimMontage;
 class ACEquipment;
 class ACAttachment;
+class ACDoAction;
 class ACharacter;
+class UParticleSystem;
+class UCameraShake;
 
 USTRUCT(BlueprintType)
 struct FEquipmentData
@@ -30,6 +33,28 @@ public:
 	bool bLookForward = true;
 };
 
+USTRUCT(BlueprintType)
+struct FDoActionData : public FEquipmentData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	float Power;
+
+	UPROPERTY(EditDefaultsOnly)
+	float HitStop;
+
+	UPROPERTY(EditDefaultsOnly)
+	UParticleSystem* Effect;
+
+	UPROPERTY(EditDefaultsOnly)
+	FTransform EffectTransform;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCameraShake> ShakeClass;
+};
+
 UCLASS()
 class TORETHIRDPERSONCPP_API UCActionData : public UDataAsset
 {
@@ -43,6 +68,8 @@ private:
 
 public:
 	FORCEINLINE ACEquipment* GetEquipment() { return Equipment; }
+	FORCEINLINE ACAttachment* GetAttachment() { return Attachment; }
+	FORCEINLINE ACDoAction* GetDoAction() { return DoAction; }
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Equipment")
@@ -57,7 +84,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	TSubclassOf<ACAttachment> AttachmentClass;
 
+	UPROPERTY(EditAnywhere, Category = "DoAction")
+	TSubclassOf<ACDoAction> DoActionClass;
+
+	UPROPERTY(EditAnywhere, Category = "DoAction")
+	TArray<FDoActionData> DoActionDatas;
+
 private:
 	ACEquipment* Equipment;
 	ACAttachment* Attachment;
+	ACDoAction* DoAction;
 };

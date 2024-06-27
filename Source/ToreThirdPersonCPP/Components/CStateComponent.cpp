@@ -29,6 +29,10 @@ void UCStateComponent::SetEquipMode()
 	ChangeType(EStateType::Equip);
 }
 
+void UCStateComponent::SetActionMode()
+{
+}
+
 void UCStateComponent::ChangeType(EStateType InNewType)
 {
 	if (OnStateTypeChanged.IsBound())

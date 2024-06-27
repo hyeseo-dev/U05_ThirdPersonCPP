@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CActionData.h"
 #include "CDoAction.generated.h"
 
 class ACharacter;
@@ -22,6 +23,9 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	void SetDatas(const TArray<FDoActionData>& InDatas);
+
 public:	
 	virtual void DoAction() {};
 	virtual void Begin_DoAction() {};
@@ -29,11 +33,15 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	ACharacter* OnwerCharacter;
+	ACharacter* OwnerCharacter;
 
 	UPROPERTY(BlueprintReadOnly)
 	UCAttributeComponent* AttributeComp;
 
 	UPROPERTY(BlueprintReadOnly)
 	UCStateComponent* StateComp;
+
+protected:
+	TArray<FDoActionData> Datas;
+
 };
