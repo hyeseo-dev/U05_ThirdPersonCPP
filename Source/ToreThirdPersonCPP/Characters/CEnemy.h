@@ -9,6 +9,7 @@ class UCAttributeComponent;
 class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
+class UWidgetComponent;
 
 UCLASS()
 class TORETHIRDPERSONCPP_API ACEnemy : public ACharacter, public ICCharacterInterface
@@ -36,6 +37,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UWidgetComponent* NameWidgetComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+	UWidgetComponent* HealthWidgetComp;
 
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
