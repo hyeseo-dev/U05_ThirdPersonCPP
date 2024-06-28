@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interface/CCharacterInterface.h"
+#include "Components/CStateComponent.h"
 #include "CEnemy.generated.h"
 
 class UCAttributeComponent;
@@ -24,6 +25,16 @@ protected:
 
 public:
 	void ChangeBodyColor(FLinearColor InColor) override;
+
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+private:
+	UFUNCTION()
+	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
+
+private:
+	void Hitted();
+	void Dead();
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
@@ -47,4 +58,6 @@ protected:
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
+
+	AController* DamageInstigator;
 };

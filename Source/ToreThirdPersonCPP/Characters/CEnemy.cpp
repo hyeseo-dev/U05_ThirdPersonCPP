@@ -71,9 +71,11 @@ void ACEnemy::BeginPlay()
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
 
-	Super::BeginPlay();
+	StateComp->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
 
 	ActionComp->SetUnarmedMode();
+
+	Super::BeginPlay();
 
 	NameWidgetComp->InitWidget();
 	UCEnemyNameWidget* NameWidgetInstance = Cast<UCEnemyNameWidget>(NameWidgetComp->GetUserWidgetObject());
@@ -94,4 +96,51 @@ void ACEnemy::ChangeBodyColor(FLinearColor InColor)
 {
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
+}
+
+float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	DamageInstigator = EventInstigator;
+
+	AttributeComp->DcreaseHealth(Damage);
+
+	if (AttributeComp->GetCurrentHealth() <= 0.f)
+	{
+		StateComp->SetDeadMode();
+		return 0.0f;
+	}
+
+	return DamageValue;
+}
+
+void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
+{
+	switch (InNewType)
+	{
+
+	case EStateType::Hitted:
+	{
+		Hitted();
+	}
+	break;
+	case EStateType::Dead:
+	{
+		Dead();
+	}
+	break;
+	}
+}
+
+void ACEnemy::Hitted()
+{
+	UCEnemyHealthWidget* HealthWidgetInstance = Cast<UCEnemyHealthWidget>(HealthWidgetComp->GetUserWidgetObject());
+	if (HealthWidgetInstance)
+	{
+		HealthWidgetInstance->ApplyHealth(AttributeComp->GetCurrentHealth(), AttributeComp->GetMaxHealth());
+	}
+}
+
+void ACEnemy::Dead()
+{
 }

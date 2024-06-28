@@ -33,6 +33,14 @@ void UCStateComponent::SetActionMode()
 {
 }
 
+void UCStateComponent::SetHittedMode()
+{
+}
+
+void UCStateComponent::SetDeadMode()
+{
+}
+
 void UCStateComponent::ChangeType(EStateType InNewType)
 {
 	if (OnStateTypeChanged.IsBound())
