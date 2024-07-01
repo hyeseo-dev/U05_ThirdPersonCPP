@@ -18,6 +18,16 @@ public:
 	virtual void Begin_DoAction() override;
 	virtual void End_DoAction() override;
 	
+public:
+	void EnableCombo();
+	void DisableCombo();
+
+	void ClearHittedCharacters();
+
 private:
 	int32 ComboCount;
+	bool bCanCombo;
+	bool bSuccessCombo;
+
+	TArray<ACharacter*> HittedCharacters;
 };
