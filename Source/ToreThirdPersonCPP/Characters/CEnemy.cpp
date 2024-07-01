@@ -10,9 +10,11 @@
 #include "Widgets/CEnemyNameWidget.h"
 #include "Widgets/CEnemyHealthWidget.h"
 
-
 ACEnemy::ACEnemy()
 {
+	//Property Settings
+	LaunchValue = 25.f;
+
 	//Create Scene Component
 	CHelpers::CreateSceneComponent(this, &NameWidgetComp, "NameWidgetComp", GetMesh());
 	CHelpers::CreateSceneComponent(this, &HealthWidgetComp, "HealthWidgetComp", GetMesh());
@@ -38,9 +40,9 @@ ACEnemy::ACEnemy()
 
 	//-> Movmement
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
-	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
 
-	//-> Name Widget
+	//-> Widget
 	TSubclassOf<UCEnemyNameWidget> NameWidgetAsset;
 	CHelpers::GetClass(&NameWidgetAsset, "/Game/Widgets/WB_EnemyName");
 	NameWidgetComp->SetWidgetClass(NameWidgetAsset);
@@ -48,7 +50,6 @@ ACEnemy::ACEnemy()
 	NameWidgetComp->SetDrawSize(FVector2D(240, 30));
 	NameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 
-	//-> Health Widget
 	TSubclassOf<UCEnemyHealthWidget> HealthWidgetAsset;
 	CHelpers::GetClass(&HealthWidgetAsset, "/Game/Widgets/WB_EnemyHealth");
 	HealthWidgetComp->SetWidgetClass(HealthWidgetAsset);
@@ -59,6 +60,7 @@ ACEnemy::ACEnemy()
 
 void ACEnemy::BeginPlay()
 {
+	//Create Dynamic Material
 	UMaterialInstanceConstant* BodyMaterialAsset;
 	UMaterialInstanceConstant* LogoMaterialAsset;
 
@@ -73,9 +75,9 @@ void ACEnemy::BeginPlay()
 
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
 
-	ActionComp->SetUnarmedMode();
-
 	Super::BeginPlay();
+
+	ActionComp->SetUnarmedMode();
 
 	NameWidgetComp->InitWidget();
 	UCEnemyNameWidget* NameWidgetInstance = Cast<UCEnemyNameWidget>(NameWidgetComp->GetUserWidgetObject());
@@ -94,13 +96,22 @@ void ACEnemy::BeginPlay()
 
 void ACEnemy::ChangeBodyColor(FLinearColor InColor)
 {
+	CheckTrue(StateComp->IsDeadMode());
+
+	if (StateComp->IsHittedMode())
+	{
+		LogoMaterial->SetScalarParameterValue("bHitted", 1.f);
+		LogoMaterial->SetVectorParameterValue("LogoEmissive", InColor);
+		return;
+	}
+
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
 
 float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	DamageInstigator = EventInstigator;
 
 	AttributeComp->DcreaseHealth(Damage);
@@ -108,8 +119,10 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContro
 	if (AttributeComp->GetCurrentHealth() <= 0.f)
 	{
 		StateComp->SetDeadMode();
-		return 0.0f;
+		return 0.f;
 	}
+
+	StateComp->SetHittedMode();
 
 	return DamageValue;
 }
@@ -118,12 +131,12 @@ void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 {
 	switch (InNewType)
 	{
-
 	case EStateType::Hitted:
 	{
 		Hitted();
 	}
 	break;
+
 	case EStateType::Dead:
 	{
 		Dead();
@@ -134,13 +147,37 @@ void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
 
 void ACEnemy::Hitted()
 {
+	//Apply Health Widget
 	UCEnemyHealthWidget* HealthWidgetInstance = Cast<UCEnemyHealthWidget>(HealthWidgetComp->GetUserWidgetObject());
 	if (HealthWidgetInstance)
 	{
 		HealthWidgetInstance->ApplyHealth(AttributeComp->GetCurrentHealth(), AttributeComp->GetMaxHealth());
 	}
+
+	//Play Hitted Montage
+	MontagesComp->PlayHitted();
+
+	//Look At Attack
+	FVector Start = GetActorLocation();
+	FVector Target = DamageInstigator->GetPawn()->GetActorLocation();
+	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Start, Target));
+
+	//Hit Back
+	FVector Direction = Start - Target;
+	Direction.Normalize();
+
+	LaunchCharacter(Direction * DamageValue * LaunchValue, true, false);
+
+	//Set Hitted Logo Color
+	ChangeBodyColor(FLinearColor(40, 0, 0));
+	UKismetSystemLibrary::K2_SetTimer(this, "RestoreLogoColor", 0.5f, false);
 }
 
 void ACEnemy::Dead()
 {
+}
+
+void ACEnemy::RestoreLogoColor()
+{
+	LogoMaterial->SetScalarParameterValue("bHitted", 0.f);
 }
