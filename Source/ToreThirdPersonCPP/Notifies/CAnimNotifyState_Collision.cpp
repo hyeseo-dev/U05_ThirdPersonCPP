@@ -46,6 +46,8 @@ void UCAnimNotifyState_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
 	ACDoAction_Melee* DoAction_Melee = Cast<ACDoAction_Melee>(ActionData->GetDoAction());
 	CheckNull(DoAction_Melee);
 
-	DoAction_Melee->EnableCombo();
+	DoAction_Melee->ClearHittedCharacters();
+
+
 }
 

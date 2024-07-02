@@ -160,12 +160,12 @@ void ACEnemy::Hitted()
 	//Look At Attack
 	FVector Start = GetActorLocation();
 	FVector Target = DamageInstigator->GetPawn()->GetActorLocation();
-	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Start, Target));
+	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Start, Target);
+	SetActorRotation(FRotator(0, Rotation.Yaw, 0));
 
 	//Hit Back
 	FVector Direction = Start - Target;
 	Direction.Normalize();
-
 	LaunchCharacter(Direction * DamageValue * LaunchValue, true, false);
 
 	//Set Hitted Logo Color
