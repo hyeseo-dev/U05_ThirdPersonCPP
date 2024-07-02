@@ -186,6 +186,9 @@ void ACEnemy::Dead()
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCharacterMovement()->DisableMovement();
+
+	//Off All Attachemnt Collisions
+	ActionComp->OffAllCollsions();
 }
 
 void ACEnemy::RestoreLogoColor()
