@@ -4,6 +4,8 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Components/WidgetComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CActionComponent.h"
@@ -175,6 +177,15 @@ void ACEnemy::Hitted()
 
 void ACEnemy::Dead()
 {
+	//Hidden Widgets
+	NameWidgetComp->SetVisibility(false);
+	HealthWidgetComp->SetVisibility(false);
+
+	//Ragdoll
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
 }
 
 void ACEnemy::RestoreLogoColor()
