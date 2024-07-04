@@ -25,6 +25,11 @@ void ACDoAction_MagicBall::DoAction()
 	Super::DoAction();
 	CheckFalse(Datas.Num() > 0);
 
+	if (Aim->CanAim())
+	{
+		CheckFalse(Aim->IsZooming());
+	}
+
 	StateComp->SetActionMode();
 	OwnerCharacter->PlayAnimMontage(Datas[0].AnimMontage, Datas[0].PlayRate, Datas[0].StartSection);
 

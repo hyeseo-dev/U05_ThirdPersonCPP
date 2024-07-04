@@ -20,6 +20,9 @@ class TORETHIRDPERSONCPP_API UCStateComponent : public UActorComponent
 public:	
 	UCStateComponent();
 
+public:
+	FORCEINLINE EStateType GetType() { return Type; }
+
 protected:
 	virtual void BeginPlay() override;
 
