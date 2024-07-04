@@ -4,6 +4,7 @@
 #include "Actions/CDoAction.h"
 #include "CDoAction_MagicBall.generated.h"
 
+class UCAim;
 
 UCLASS()
 class TORETHIRDPERSONCPP_API ACDoAction_MagicBall : public ACDoAction
@@ -14,8 +15,18 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	virtual void Tick(float DeltaTime) override;
+
+public:
 	virtual void DoAction() override;
 	virtual void Begin_DoAction() override;
 	virtual void End_DoAction() override;
+
+	virtual void Begin_SubAction() override;
+	virtual void End_SubAction() override;
+
+private:
+	UPROPERTY()
+	UCAim* Aim;
 	
 };
