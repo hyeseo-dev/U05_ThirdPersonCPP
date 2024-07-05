@@ -50,6 +50,7 @@ private:
 	void OnOneHand();
 	void OnTwoHand();
 	void OnMagicBall();
+	void OnWarp();
 
 	void OnPrimaryAction();
 	void OnSecondaryAction();
