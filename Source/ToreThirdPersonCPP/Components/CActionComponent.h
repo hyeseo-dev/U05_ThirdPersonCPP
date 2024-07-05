@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Components/CActionComponent.h"
 #include "CActionComponent.generated.h"
 
 class UCActionData;

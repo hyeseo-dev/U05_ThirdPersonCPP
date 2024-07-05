@@ -26,7 +26,7 @@ void ACDoAction_Warp::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	PreviewMeshComp->SetVisibility(false);
-	//CheckFalse(*bEquipped);
+	CheckFalse(*bEquipped);
 
 	FVector CurLoc;
 	FRotator CurRot;
