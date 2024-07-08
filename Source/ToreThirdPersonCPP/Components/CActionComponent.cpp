@@ -102,7 +102,7 @@ void UCActionComponent::SetWarpMode()
 	SetMode(EActionType::Warp);
 }
 
-void UCActionComponent::SetWhirlwindMode()
+void UCActionComponent::SetWhirlWindMode()
 {
 	SetMode(EActionType::Whirlwind);
 }

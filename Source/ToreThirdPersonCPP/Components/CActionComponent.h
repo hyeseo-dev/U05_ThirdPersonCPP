@@ -64,7 +64,7 @@ public:
 	void SetTwoHandMode();
 	void SetMagicBallMode();
 	void SetWarpMode();
-	void SetWhirlwindMode();
+	void SetWhirlWindMode();
 
 private:
 	void SetMode(EActionType InNewType);
