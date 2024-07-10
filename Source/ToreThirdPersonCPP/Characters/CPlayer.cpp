@@ -116,6 +116,11 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+FGenericTeamId ACPlayer::GetGenericTeamId() const
+{
+	return FGenericTeamId(TeamID);
+}
+
 void ACPlayer::OnMoveForward(float Axis)
 {
 	CheckFalse(AttributeComp->IsCanMove());
