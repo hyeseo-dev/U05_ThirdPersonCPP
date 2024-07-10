@@ -14,7 +14,8 @@ public class ToreThirdPersonCPP : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"AIModule" 
+			"AIModule",
+			"GameplayTasks"
 		});
 	}
 }
