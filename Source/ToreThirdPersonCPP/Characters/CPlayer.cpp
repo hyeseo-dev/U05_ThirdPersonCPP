@@ -265,11 +265,15 @@ void ACPlayer::OffSecondaryAction()
 void ACPlayer::OnChangeWeapon()
 {
 	WeaponWidget->SetVisibility(ESlateVisibility::Visible);
+	APlayerController* APC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APC->bShowMouseCursor = true;
 }
 
 void ACPlayer::OffChangeWeapon()
 {
 	WeaponWidget->SetVisibility(ESlateVisibility::Hidden);
+	APlayerController* APC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APC->bShowMouseCursor = false;
 }
 
 void ACPlayer::Begin_Roll()
