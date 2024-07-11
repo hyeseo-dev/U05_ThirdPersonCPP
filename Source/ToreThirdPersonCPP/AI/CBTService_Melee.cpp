@@ -32,14 +32,24 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	//Try Get PlayerKey From BB
 	ACPlayer* Player = BehaviorComp->GetPlayerKey();
 
-	//No Sensed
+	//Not Detected Player
 	if (Player == nullptr)
 	{
 		BehaviorComp->SetWaitMode();
 		return;
 	}
 
-	//Sensed
-	//-> 감지 범위 from AIC
-	//-> 공격 범위 -> 공개 변수
+	//Detected Player
+	float Distance = EnemyPawn->GetDistanceTo(Player);
+
+	if (Distance < AIC->GetBehaviorRange())
+	{
+		BehaviorComp->SetActionMode();
+		return;
+	}
+
+	if (Distance < AIC->GetSightRadius())
+	{
+		BehaviorComp->SetApproachMode();
+	}
 }
