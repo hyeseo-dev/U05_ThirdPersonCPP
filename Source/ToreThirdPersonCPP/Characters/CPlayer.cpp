@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInstanceConstant.h"
@@ -9,6 +10,7 @@
 #include "Components/COptionComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CActionComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "Actions/CActionData.h"
 #include "Actions/CAction.h"
 
@@ -28,6 +30,13 @@ ACPlayer::ACPlayer()
 	CHelpers::CreateActorComponent(this, &AttributeComp, "AttributeComp");
 	CHelpers::CreateActorComponent(this, &OptionComp, "OptionComp");
 	CHelpers::CreateActorComponent(this, &StateComp, "StateComp");
+
+
+	TSubclassOf<UUserWidget> WeaponWidgetClass;
+	CHelpers::GetClass(&WeaponWidgetClass, "/Game/Widgets/WB_WeaponIcon");
+	
+
+	WeaponWidget = CreateWidget(GetWorld(), WeaponWidgetClass);
 
 	//Component Settings
 	//-> MeshComp
@@ -75,6 +84,12 @@ void ACPlayer::BeginPlay()
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
 
+	if (WeaponWidget != nullptr)
+	{
+		WeaponWidget->AddToViewport();
+		WeaponWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 	ActionComp->SetUnarmedMode();
 }
 
@@ -113,6 +128,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("PrimaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnPrimaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnSecondaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Released, this, &ACPlayer::OffSecondaryAction);
+	PlayerInputComponent->BindAction("ChangeWeapon", EInputEvent::IE_Pressed, this, &ACPlayer::OnChangeWeapon);
+	PlayerInputComponent->BindAction("ChangeWeapon", EInputEvent::IE_Released, this, &ACPlayer::OffChangeWeapon);
 
 }
 
@@ -243,6 +260,16 @@ void ACPlayer::OnSecondaryAction()
 void ACPlayer::OffSecondaryAction()
 {
 	ActionComp->DoSubAction(false);
+}
+
+void ACPlayer::OnChangeWeapon()
+{
+	WeaponWidget->SetVisibility(ESlateVisibility::Visible);
+}
+
+void ACPlayer::OffChangeWeapon()
+{
+	WeaponWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void ACPlayer::Begin_Roll()

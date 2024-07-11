@@ -15,6 +15,7 @@ class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
 class UMaterialInstanceDynamic;
+class UUserWidget;
 
 UCLASS()
 class TORETHIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -58,6 +59,8 @@ private:
 	void OnPrimaryAction();
 	void OnSecondaryAction();
 	void OffSecondaryAction();
+	void OnChangeWeapon();
+	void OffChangeWeapon();
 
 private:
 	void Begin_Roll();
@@ -100,4 +103,7 @@ private:
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
+
+private:
+	UUserWidget* WeaponWidget;
 };
