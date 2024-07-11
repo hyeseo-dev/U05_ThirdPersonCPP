@@ -264,9 +264,12 @@ void ACPlayer::OffSecondaryAction()
 
 void ACPlayer::OnChangeWeapon()
 {
+	CheckFalse(StateComp->IsIdleMode());
+
 	WeaponWidget->SetVisibility(ESlateVisibility::Visible);
 	APlayerController* APC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	APC->bShowMouseCursor = true;
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.1f);
 }
 
 void ACPlayer::OffChangeWeapon()
@@ -274,6 +277,7 @@ void ACPlayer::OffChangeWeapon()
 	WeaponWidget->SetVisibility(ESlateVisibility::Hidden);
 	APlayerController* APC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	APC->bShowMouseCursor = false;
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
 }
 
 void ACPlayer::Begin_Roll()
