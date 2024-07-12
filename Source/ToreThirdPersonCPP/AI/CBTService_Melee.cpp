@@ -35,6 +35,7 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	ACPlayer* Player = BehaviorComp->GetPlayerKey();
 
 	//Not Detected Player
+	AIC->ClearFocus(EAIFocusPriority::Gameplay);
 	if (Player == nullptr)
 	{
 		if (PatrolComp->IsPathValid())
@@ -42,7 +43,6 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 			BehaviorComp->SetPatrolMode();
 			return;
 		}
-		
 
 		BehaviorComp->SetWaitMode();
 		return;
