@@ -56,6 +56,7 @@ ACEnemy::ACEnemy()
 	NameWidgetComp->SetRelativeLocation(FVector(0, 0, 240));
 	NameWidgetComp->SetDrawSize(FVector2D(240, 30));
 	NameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	NameWidgetComp->SetVisibility(bVisibleNameWidget);
 
 	TSubclassOf<UCEnemyHealthWidget> HealthWidgetAsset;
 	CHelpers::GetClass(&HealthWidgetAsset, "/Game/Widgets/WB_EnemyHealth");
@@ -230,7 +231,7 @@ void ACEnemy::Dead()
 	Direction.Normalize();
 	GetMesh()->AddImpulseAtLocation(Direction * 3000 * DamageValue, Start);
 
-	//Off All Attachemnt Collisions
+	//Off ActionComp Disable
 	ActionComp->OffAllCollsions();
 
 	//Dissolve
@@ -263,5 +264,6 @@ void ACEnemy::StartDissolve(float Output)
 
 void ACEnemy::EndDissolve()
 {
+	ActionComp->DestoryAll();
 	Destroy();
 }

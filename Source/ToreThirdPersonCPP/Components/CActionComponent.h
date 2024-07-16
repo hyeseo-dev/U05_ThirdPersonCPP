@@ -32,6 +32,7 @@ public:
 	void DoSubAction(bool bBegin);
 
 	void OffAllCollsions();
+	void DestoryAll();
 
 public:
 	UFUNCTION(BlueprintPure)
