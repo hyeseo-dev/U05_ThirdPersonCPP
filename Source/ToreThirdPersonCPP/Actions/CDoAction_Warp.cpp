@@ -1,10 +1,12 @@
 #include "CDoAction_Warp.h"
 #include "Global.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/GameModeBase.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CAttributeComponent.h"
+#include "Components/CBehaviorComponent.h"
 #include "CAttachment.h"
 
 void ACDoAction_Warp::BeginPlay()
@@ -26,7 +28,9 @@ void ACDoAction_Warp::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	PreviewMeshComp->SetVisibility(false);
+
 	CheckFalse(*bEquipped);
+	CheckFalse(IsPlayerClass());
 
 	FVector CurLoc;
 	FRotator CurRot;
@@ -42,14 +46,30 @@ void ACDoAction_Warp::DoAction()
 	Super::DoAction();
 
 	CheckFalse(StateComp->IsIdleMode());
+
+	if (IsPlayerClass())
+	{
+		FRotator Temp;
+		CheckFalse(GetCursorLocationAndRotation(Location, Temp));
+	}
+	else
+	{
+		AController* AIC = OwnerCharacter->GetController();
+		if (AIC)
+		{
+			UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
+			if (BehaviorComp)
+			{
+				Location = BehaviorComp->GetLocationKey();
+			}
+		}
+	}
+
 	StateComp->SetActionMode();
-
-	FRotator Temp;
-	GetCursorLocationAndRotation(Location, Temp);
-	Location.Z += OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-
 	OwnerCharacter->PlayAnimMontage(Datas[0].AnimMontage, Datas[0].PlayRate, Datas[0].StartSection);
 	Datas[0].bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop();
+
+	SetPreviewMeshColor(FLinearColor(20, 0, 0));
 }
 
 void ACDoAction_Warp::Begin_DoAction()
@@ -70,6 +90,8 @@ void ACDoAction_Warp::End_DoAction()
 
 	StateComp->SetIdleMode();
 	AttributeComp->SetMove();
+
+	SetPreviewMeshColor(FLinearColor(0, 20, 20));
 }
 
 bool ACDoAction_Warp::GetCursorLocationAndRotation(FVector& OutLocation, FRotator& OutRotation)
@@ -89,4 +111,15 @@ bool ACDoAction_Warp::GetCursorLocationAndRotation(FVector& OutLocation, FRotato
 	}
 
 	return false;
+}
+
+void ACDoAction_Warp::SetPreviewMeshColor(FLinearColor InColor)
+{
+	FVector FromColor = FVector(InColor.R, InColor.G, InColor.B);
+	PreviewMeshComp->SetVectorParameterValueOnMaterials("Emissive", FromColor);
+}
+
+bool ACDoAction_Warp::IsPlayerClass()
+{
+	return (OwnerCharacter->GetClass()) == (GetWorld()->GetAuthGameMode()->DefaultPawnClass);
 }
