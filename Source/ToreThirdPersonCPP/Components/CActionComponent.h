@@ -31,6 +31,7 @@ public:
 
 	void DoSubAction(bool bBegin);
 
+	void Abort();
 	void OffAllCollsions();
 	void DestoryAll();
 

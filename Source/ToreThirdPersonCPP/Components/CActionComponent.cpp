@@ -52,6 +52,23 @@ void UCActionComponent::DoSubAction(bool bBegin)
 	}
 }
 
+void UCActionComponent::Abort()
+{
+	CheckNull(GetCurrentActionData());
+	CheckTrue(IsUnarmedMode());
+
+	if (GetCurrentActionData()->GetEquipment())
+	{
+		GetCurrentActionData()->GetEquipment()->Begin_Equip();
+		GetCurrentActionData()->GetEquipment()->End_Equip();
+	}
+
+	if (GetCurrentActionData()->GetDoAction())
+	{
+		GetCurrentActionData()->GetDoAction()->Abort();
+	}
+}
+
 void UCActionComponent::OffAllCollsions()
 {
 	for (const auto& DataAsset : Datas)

@@ -153,6 +153,7 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContro
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	DamageInstigator = EventInstigator;
 
+	ActionComp->Abort();
 	AttributeComp->DcreaseHealth(Damage);
 
 	if (AttributeComp->GetCurrentHealth() <= 0.f)
