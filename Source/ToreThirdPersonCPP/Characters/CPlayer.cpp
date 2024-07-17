@@ -6,6 +6,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/PostProcessComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/COptionComponent.h"
 #include "Components/CMontagesComponent.h"
@@ -22,6 +23,7 @@ ACPlayer::ACPlayer()
 	// Create Scene Component
 	CHelpers::CreateSceneComponent(this, &SpringArmComp, "SpringArmComp", GetMesh());
 	CHelpers::CreateSceneComponent(this, &CameraComp, "CameraComp", SpringArmComp);
+	CHelpers::CreateSceneComponent(this, &PostProcessComp, "PostProcessComp", RootComponent);
 
 	//Create Actor Component
 	CHelpers::CreateActorComponent(this, &ActionComp, "ActionComp");
@@ -54,8 +56,14 @@ ACPlayer::ACPlayer()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
+	//-> PostProcess
+	PostProcessComp->Settings.bOverride_VignetteIntensity = false;
+	PostProcessComp->Settings.VignetteIntensity = 2.f;
+
+	PostProcessComp->Settings.bOverride_DepthOfFieldFocalDistance = false;
+	PostProcessComp->Settings.DepthOfFieldFocalDistance = 20.f;
 }
 
 void ACPlayer::BeginPlay()
@@ -288,6 +296,11 @@ void ACPlayer::Dead()
 
 	//Off ActionComp Disable
 	ActionComp->OffAllCollsions();
+	DisableInput(GetController<APlayerController>());
+
+	//Enable PostProcess
+	PostProcessComp->Settings.bOverride_VignetteIntensity = true;
+	PostProcessComp->Settings.bOverride_DepthOfFieldFocalDistance = true;
 
 	//Timet Event
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.25f);
