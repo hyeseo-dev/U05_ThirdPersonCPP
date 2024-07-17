@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInstanceConstant.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Components/CAttributeComponent.h"
@@ -304,12 +305,22 @@ void ACPlayer::Dead()
 
 	//Timet Event
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.25f);
-	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 2.f, false);
+	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 1.f, false);
 }
 
 void ACPlayer::End_Dead()
 {
-	CLog::Print("Game Over");
+	ensure(DeadWidgetClass);
+
+	APlayerController* PC = GetController<APlayerController>();
+	CheckNull(PC);
+	DeadWidget = CreateWidget<UUserWidget>(PC, DeadWidgetClass);
+	DeadWidget->AddToViewport();
+
+	PC->bShowMouseCursor = true;
+	PC->SetInputMode(FInputModeUIOnly());
+
+	ActionComp->DestoryAll();
 }
 
 void ACPlayer::Begin_Roll()

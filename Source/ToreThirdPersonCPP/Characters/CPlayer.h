@@ -108,11 +108,17 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "TeamID")
 	uint8 TeamID;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> DeadWidgetClass;
+
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
 
 	float DamageValue;
 	AController* DamageInstigator;
+
+	UPROPERTY()
+	UUserWidget* DeadWidget;
 
 };
